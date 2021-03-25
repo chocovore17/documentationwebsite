@@ -77,13 +77,38 @@ xSemaphoreGive(pitchMutex);
                         <p>
                             This feature allows the user to play in whichever key they desire without having to recall the exact notes which exist in that key. By rotating knob 1, key options are cycled through and displayed on the OLED screen. If set to ‘None’ all the notes are assigned as normal, however when set to a certain key, the notes assigned to each key change. For example if the key C minor was selected, the note values would be as in the Figure on the left is in the Cmaj setting and the Figure on the right is the Cmin setting.  The sharp/flat notes are set to not make sounds on this setting.
                           </p>
-    
-                        
-                          <!-- add image -->
+                          <div class="row">
+                            <div class="column">
+                                <img src="./../../assets/images/C_minor.JPG" width=80% alt="Keyboard in C Major">
+                            </div>
+                            <div class="column">
+                                <img src="./../../assets/images/c_MINORREAL.JPG"  width=80% alt="Keboard in C Minor">
+                            </div>
+                          </div>
+
                           <p>
                             The findNote function will return which key has been pressed and then the correct sound will be indexed from stepSizes depending on the rotation setting of knob1. The limit set on this knob is 14 since there are 14 different keys configured. 
-
                           </p>
+                                 
+                        <pre><code>
+                            
+const uint32_t stepSizes = 0,51076922,54112683,57330004,60740599,64352276,68178701,72231589,76528508,81077269,85899346,91006452,96418111,
+    0,51076922,0,57330004,0,64352276,68178701,0,76528508,0,85899346,0,96418111, //Cmaj
+    0,51076922,0,57330004,0,60740599,68178701,0,76528508,0,81077269,0,91006452, //Cmin
+scanKeysTask (void * pvParameters)
+    // other code
+    int offset = findNote(keyArray[0],keyArray[1],keyArray[2]);
+    int key_sig = knob1.getKnobRotationValue();
+
+    if (localCurrentStepSize != stepSizes[offset + 13*key_sig])
+        localCurrentStepSize = stepSizes[offset + 13*key_sig];
+        keysChanged = true;
+    
+    musicNote = notes[offset];
+    // other code
+                    </code></pre>
+
+                          
                     </section><!--//section-->
                     <section class="docs-section" id="item-2-5">
                         <h2 class="section-heading">2.5 Waveform selection</h2>
@@ -112,35 +137,48 @@ xSemaphoreGive(pitchMutex);
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>Change Octaves</td>
-                        <td>Dynamic variable shift to multiply the note frequency by the current knob rotation
-                            </td>
-                      </tr>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>Read all knobs</td>
+                          <td><ol>
+                            <li>Knobs class, scan knob function becomes object oriented
+                            </li>
+                            <li>Each scanKnob between waiting to receive semaphore and giving it up after taks complete</li>
+                            <li>Each knob has its semaphore - concurrency and we can change them at the same time</li>
+                          </ol> </td>
+                        </tr>
                       <tr>
                         <th scope="row">2</th>
+                        <td>Change Octaves</td>
+                        <td>Dynamic variable shift to multiply the note frequency by the current knob rotation
+                        Knob3 changes the frequency shift by the current knob value (just read) and updates in the atomic fetch for step size.
+                        All done in the same function
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
                         <td>Shift in frequency</td>
                         <td>
                             Y axis of the joystick
                             </td>
                       </tr>
                       <tr>
-                        <th scope="row">3</th>
+                        <th scope="row">4</th>
                         <td>Sustaining a note</td>
                         <td>The note is not reset to 0 until the knob is released</td>
                       </tr>
                       <tr>
-                        <th scope="row">4</th>
+                        <th scope="row">5</th>
                         <td>Selecting a key</td>
                         <td>Limited to the 14 keys of the bored, use different step sizes depending on current key 
                             <ul>
                             <li>Volatile noteMessage updated in scanKeysTask</li>
                             <li>Add message to queue, printed in serial port (FIFO so updated consistently → size 8 is enough)</li>
+                            <li>Semaphore because this knob value read in scanKeys task and in the display </li>
                           </ul></td>
                       </tr>
                       <tr>
-                        <th scope="row">5</th>
+                        <th scope="row">6</th>
                         <td>Selecting a waveform</td>
                         <td>3 waveforms to output different types of sound<ul>
                             <li>Sawtooth (default)</li>
