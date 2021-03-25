@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { CoreFeaturesComponent } from './core-features/core-features.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { HomeComponent } from './home/home.component';
+import { AdvancedFeaturesComponent } from './advanced-features/advanced-features.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { HomeComponent } from './home/home.component';
     CoreFeaturesComponent,
     ResourcesComponent,
     HomeComponent,
+    AdvancedFeaturesComponent,
   ],
   imports: [
     BrowserModule,
