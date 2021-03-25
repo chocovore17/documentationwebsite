@@ -1,25 +1,6 @@
 
    
     
-<header class="header fixed-top">	    
-    <div class="branding docs-branding">
-        <div class="container-fluid position-relative py-2">
-            <div class="docs-logo-wrapper">
-              <div class="site-logo"><a class="navbar-brand" href="index.html"><img class="logo-icon mr-2" src="assets/images/Logo_for_Imperial_College_London.svg" alt="logo"><span class="logo-text">Embedded<span class="text-alt">Systems</span></span></a></div>    
-            </div><!--//docs-logo-wrapper-->
-          <div class="docs-top-utilities d-flex justify-content-end align-items-center">
-  
-      <ul class="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex">
-        <li class="list-inline-item"><a href="#"><i class="fab fa-github fa-fw"></i></a></li>
-              <!-- <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fab fa-slack fa-fw"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fab fa-product-hunt fa-fw"></i></a></li> -->
-            </ul><!--//social-list-->
-            <!-- <a href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/coderdocs-free-bootstrap-4-documentation-template-for-software-projects/" class="btn btn-primary d-none d-lg-flex">Download</a> -->
-          </div><!--//docs-top-utilities-->
-        </div><!--//container-->
-    </div><!--//branding-->
-  </header><!--//header-->
   
     <div class="docs-wrapper">
     <div id="docs-sidebar" class="docs-sidebar">
@@ -51,28 +32,111 @@
             
             <article class="docs-article" id="section-2">
                 <header class="docs-header">
-                    <h1 class="docs-heading">Installation</h1>
+                    <h1 class="docs-heading">Tasks performed</h1>
                     <section class="docs-intro">
-                        <p>Section intro goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque finibus condimentum nisl id vulputate. Praesent aliquet varius eros interdum suscipit. Donec eu purus sed nibh convallis bibendum quis vitae turpis. Duis vestibulum diam lorem, vitae dapibus nibh facilisis a. Fusce in malesuada odio.</p>
+                        <p>Description of each core task performed by the system and their method of implementation.</p>
                     </section><!--//docs-intro-->
                 </header>
                     <section class="docs-section" id="item-2-1">
-                    <h2 class="section-heading">Section Item 2.1</h2>
-                    <p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
+                    <h2 class="section-heading">1.1 Playing the correct key</h2>
+                    <p>The music synthesiser can play the correct musical tone when a key is pressed. This is implemented in scanKeysTask() where the current state of the multiplexor is read and the currentStepSize variable is updated which determines which tone is played. Since the part which reads the key states is relatively simple, there is no perceivable delay between pressing the key and the tone starting to sound from the speaker.</p>
                 </section><!--//section-->
                 
                 <section class="docs-section" id="item-2-2">
-                    <h2 class="section-heading">Section Item 2.2</h2>
-                    <p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
+                    <h2 class="section-heading">1.2 OLED Display</h2>
+                    <p>
+                        The music synthesiser is able to output certain information on the OLED display such as which note is currently being played. 
+                        This is implemented in the displayUpdateTask function. Since scanKeysTask() and displayUpdateTask() both read keyArray. 
+                         We have a semaphore ensuring that keyArray is not being simultaneously accessed.
+                    
+                    </p>
+                    <pre><code>
+xSemaphoreTake(keyArrayMutex, portMAX_DELAY);
+xSemaphoreGive(keyArrayMutex);
+
+uint8_t outValue = (phaseAcc >> 24) >> (8- knob3Position/2);
+                        
+                    </code></pre>
+                    <p>
+                        By turning knob 2, the volume of the tones can be adjusted. A default startup value is set to 7 (mid value), and as knob 2 is rotated clockwise the volume increases, and when turned anti-clockwise the volume decreases. There are 17 volume states 0-16,  with the 0 volume state being the muted state. The knob positions are bounded so if the knob continues to be turned at a maximum or minimum volume, the current volume setting is not changed. There is a volumeMutex semaphore because the current position of the knob is also read when updating the OLED display. __atomic_add_fetch is used to ensure that the knobPosition is updated all at once incase of an interrupt. The OLED display shows the current volume setting, this is completed in displayUpdateTake, and reads the position of knob 4, with a mutex to avoid inconsistency.
+
+                    </p>
                 </section><!--//section-->
                 
                 <section class="docs-section" id="item-2-3">
-                    <h2 class="section-heading">Section Item 2.3</h2>
-                    <p>Vivamus efficitur fringilla ullamcorper. Cras condimentum condimentum mauris, vitae facilisis leo. Aliquam sagittis purus nisi, at commodo augue convallis id. Sed interdum turpis quis felis bibendum imperdiet. Mauris pellentesque urna eu leo gravida iaculis. In fringilla odio in felis ultricies porttitor. Donec at purus libero. Vestibulum libero orci, commodo nec arcu sit amet, commodo sollicitudin est. Vestibulum ultricies malesuada tempor.</p>
+                    <h2 class="section-heading">1.3 Adjust the volume</h2>
+                    <p>By turning knob 2, the volume of the tones can be adjusted. A default startup value is set to 7 (mid value), and as knob 2 is rotated clockwise the volume increases, and when turned anti-clockwise the volume decreases. There are 17 volume states 0-16,  with the 0 volume state being the muted state. The knob positions are bounded so if the knob continues to be turned at a maximum or minimum volume, the current volume setting is not changed. There is a volumeMutex semaphore because the current position of the knob is also read when updating the OLED display. __atomic_add_fetch is used to ensure that the knobPosition is updated all at once incase of an interrupt. The OLED display shows the current volume setting, this is completed in displayUpdateTake, and reads the position of knob 4, with a mutex to avoid inconsistency.
+                    </p>
+                </section><!--//section-->
+                <section class="docs-section" id="item-2-4">
+                    <h2 class="section-heading">1.4 Serial port communication</h2>
+                    <p>
+                        When a key is pressed, a message is sent to the serial port which can be viewed on the serial monitor. A volatile noteMessage is updated upon key press in scanKeysTask, noteMessage consists of three characters “xxx”. The first is set as ‘P’ (key pressed) or ‘R’ (key released), the second represents the octave, ranging from 0-8, and the third represents the note as its key number ranging from 0-C. These messages are added to a queue which is printed out in the serial port. This size of the queue is set to 8 as it is assumed that no more than eight keys will be pressed at once.
+                    </p>
+
+                    <p>
+                        The synthesiser can also create tones via commands on the serial port. Messages sent via the serial port are received and decoded by the decodeMsgTask function. The decodeMsgTask thread must execute at a constant rate, this is set to the sample rate of the keyboard. The initiation interval is set to 50ms. The messages received for the serial port are in the same format as those that are sent from the keyboard: “xxx”. To play a note the message is in the form “Pxy”, where x is the octave and y is the note number in hexadecimal form representing the number of semitones the note is above C. To release a note the message is in the form “Rxy”, where x and y are ignored and the currentStepSize volatile is set to 0.
+                    </p>
+                    
+                    <pre><code>
+                        vTaskDelayUntil(&xLastWakeTime, xFrequency);
+                                               
+                                            </code></pre>
                 </section><!--//section-->
             </article><!--//docs-article-->
             
-
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Method</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Plays correct musical tone when key is pressed</td>
+                    <td>scanKeysTask() <ul>
+                        <li>reads multiplexor </li>
+                        <li> updates currentStepSize</li>
+                      </ul>
+                        </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>OLED display - note played, volume</td>
+                    <td>displayUpdateTask() 
+                        Semaphore for KeyArray to protect concurrency between scanKeysTask and displayUpdateTask
+                        </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Adjust volume with knob2</td>
+                    <td><ul>
+                        <li>Semaphore for concurrency between functions writing or reading the knob at the same time </li>
+                        <li>Atomic fetch to update knob position 1</li>
+                        <li>Special case to update knob+2 instead of 1 when turn the knob fast</li>
+                      </ul></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">4</th>
+                    <td>Send message to serial port on keypress event</td>
+                    <td>Format xxx - keypressed, keyreleased, octave
+                        <ul>
+                        <li>Volatile noteMessage updated in scanKeysTask</li>
+                        <li>Add message to queue, printed in serial port (FIFO so updated consistently → size 8 is enough)</li>
+                      </ul></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">5</th>
+                    <td>Create tones via the serial port</td>
+                    <td>Input messages decoded by decodeMsg()<ul>
+                        <li>Decode Msg thread to execute at constant rate = keyboard sample rate</li>
+                      </ul></td>
+                  </tr>
+                </tbody>
+              </table>
         </div> 
     </div>
 </div><!--//docs-wrapper-->
