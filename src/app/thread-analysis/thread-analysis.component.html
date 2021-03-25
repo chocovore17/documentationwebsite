@@ -1,0 +1,118 @@
+
+   
+    
+  
+    <div class="docs-wrapper">
+        <div id="docs-sidebar" class="docs-sidebar">
+            <div class="top-search-box d-lg-none p-3">
+                <form class="search-form">
+                    <input type="text" placeholder="Search the docs..." name="search" class="form-control search-input">
+                    <button type="submit" class="btn search-btn" value="Search"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <nav id="docs-nav" class="docs-nav navbar">
+                <ul class="section-items list-unstyled nav flex-column pb-3">
+                    <li class="nav-item section-title"><a class="nav-link scrollto active" href="#section-1"><span class="theme-icon-holder mr-2"><i class="fas fa-map-signs"></i></span>Introduction</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-1">Section Item 1.1</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-2">Section Item 1.2</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-3">Section Item 1.3</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-4">Section Item 1.4</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-5">Section Item 1.5</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-6">Section Item 1.6</a></li>
+                    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-2"><span class="theme-icon-holder mr-2"><i class="fas fa-arrow-down"></i></span>Installation</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-1">Section Item 2.1</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-2">Section Item 2.2</a></li>
+                    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-3">Section Item 2.3</a></li>
+                </ul>
+    
+            </nav><!--//docs-nav-->
+        </div><!--//docs-sidebar-->
+        <div class="docs-content">
+            <div class="container">
+                
+                <article class="docs-article" id="section-2">
+                    <header class="docs-header">
+                        <h1 class="docs-heading">Threads and interrupts</h1>
+                        <section class="docs-intro">
+                            <p>All tasks are performed via threading. If more threads are run than the CPU has cores then our threads are time-sliced. The amount of time that each thread gets is dependent on the priority of the thread. After the time-slice has passed the thread must give up the core to another thread. A built-in interrupt handler can save the state of the thread while the execution is paused. 
+                                In some systems the interrupt handler has a standard interrupt time. Interrupts have priority over the main program, the main program is assigned whatever time is left over. 
+                                                                 
+                                </p>
+                                
+                        <img class="logo-icon mr-2" src="assets/images/dependencies.svg" alt="logo">
+
+                        </section><!--//docs-intro-->
+                    </header>
+                        <section class="docs-section" id="item-2-1">
+                        <h2 class="section-heading">3.1 Threads</h2>
+                        <p>
+                            The following threads were given priority as follows :
+                        </p>
+                                 
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Thread</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>  DisplayUpdateTask - Priotity 1                          </td>
+                          <td> Description: Updates the LCD display
+                            </td>
+                        </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>MsgOutTask Priority - 2</td>
+                        <td> Description: Receives message from queue and prints to serial monitor
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>ScanKeysTask Priority - 3</td>
+                        <td>Description: Monitors keys for changes and stores new values in the keyArray variable.</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">4</th>
+                        <td>DecodeMsgTask Priority - 4</td>
+                        <td> Description: Allows for changes to keys based on messages sent on the serial monitor.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                    </section><!--//section-->
+                    
+                    <section class="docs-section" id="item-2-2">
+                        <h2 class="section-heading">3.2 Time assignment</h2>
+                        <p>
+                            The scheduler will ensure that every thread gets a time slot and will often give more time to higher priority threads. Since interrupts are given priority over the main execution, we have reduced the number of interrupts.
+                            The image below displays the logic for each task
+                        </p>
+                        <img src="./../../assets/images/TaskScheduler_arduino.png" width=80% alt="Task scheduler arduino diagram">
+                    </section><!--//section-->
+                    
+                    <section class="docs-section" id="item-2-3">
+                        <h2 class="section-heading">3.3 CPU Utilisation</h2>
+                        <p>
+                            CPU utilisation will be the sum of each task utilisation.
+                            <img src="./../../assets/images/sum.JPG" width=10% alt="Formula for CPU Utilisation">
+                            With time analysis using micros(), we obtained the task utilisation for each task as <em>CPU = 101.08/100 + 9.48/10 + 53.60/10 + 4.67/5 = 8.2528</em>
+                        </p>
+                        <p> For a number <em>m</em> tasks under RMS, CPU utilisation is computed as follows
+                            <!-- insert image -->
+                            <img src="./../../assets/images/maximum.JPG" width=20% alt="Formula for CPU Utilisation">
+                            Which yield to <em>CPUMax = 0.757</em>
+                        </p>
+
+                    </section><!--//section-->
+                   
+                    
+                </article><!--//docs-article-->
+                
+            </div> 
+        </div>
+    </div><!--//docs-wrapper-->
+        
+       

@@ -7,6 +7,8 @@ import { CoreFeaturesComponent } from './core-features/core-features.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { HomeComponent } from './home/home.component';
 import { AdvancedFeaturesComponent } from './advanced-features/advanced-features.component';
+import { ThreadAnalysisComponent } from './thread-analysis/thread-analysis.component';
+import { TimeAnalysisComponent } from './time-analysis/time-analysis.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +17,8 @@ import { AdvancedFeaturesComponent } from './advanced-features/advanced-features
     ResourcesComponent,
     HomeComponent,
     AdvancedFeaturesComponent,
+    ThreadAnalysisComponent,
+    TimeAnalysisComponent,
   ],
   imports: [
     BrowserModule,
