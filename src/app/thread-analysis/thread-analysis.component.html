@@ -25,26 +25,26 @@
                     <li class="nav-item"><a class="nav-link scrollto" href="#item-2-3">Section Item 2.3</a></li>
                 </ul>
     
-            </nav><!--//docs-nav-->
-        </div><!--//docs-sidebar-->
+            </nav> 
+        </div> 
         <div class="docs-content">
             <div class="container">
                 
                 <article class="docs-article" id="section-2">
                     <header class="docs-header">
-                        <h1 class="docs-heading">Threads and interrupts</h1>
+                        <h1 class="docs-heading">Threads and memory analysis</h1>
                         <section class="docs-intro">
                             <p>All tasks are performed via threading. If more threads are run than the CPU has cores then our threads are time-sliced. The amount of time that each thread gets is dependent on the priority of the thread. After the time-slice has passed the thread must give up the core to another thread. A built-in interrupt handler can save the state of the thread while the execution is paused. 
                                 In some systems the interrupt handler has a standard interrupt time. Interrupts have priority over the main program, the main program is assigned whatever time is left over. 
                                                                  
                                 </p>
                                 
-                        <img class="logo-icon mr-2" src="assets/images/dependencies.svg" alt="logo">
+                        <img class="logo-icon mr-2" src="assets/images/shareddatastruct.svg" alt="logo">
 
                         </section><!--//docs-intro-->
                     </header>
                         <section class="docs-section" id="item-2-1">
-                        <h2 class="section-heading">3.1 Threads</h2>
+                        <h2 class="section-heading">1.1 Priorities</h2>
                         <p>
                             The following threads were given priority as follows :
                         </p>
@@ -60,7 +60,7 @@
                     <tbody>
                         <tr>
                           <th scope="row">1</th>
-                          <td>  DisplayUpdateTask - Priotity 1                          </td>
+                          <td>  DisplayUpdateTask Priority - 1                          </td>
                           <td> Description: Updates the LCD display
                             </td>
                         </tr>
@@ -84,33 +84,83 @@
                   </table>
                     </section><!--//section-->
                     
-                    <section class="docs-section" id="item-2-2">
-                        <h2 class="section-heading">3.2 Time assignment</h2>
-                        <p>
-                            The scheduler will ensure that every thread gets a time slot and will often give more time to higher priority threads. Since interrupts are given priority over the main execution, we have reduced the number of interrupts.
-                            The image below displays the logic for each task
-                        </p>
-                        <img src="./../../assets/images/TaskScheduler_arduino.png" width=80% alt="Task scheduler arduino diagram">
-                    </section><!--//section-->
-                    
-                    <section class="docs-section" id="item-2-3">
-                        <h2 class="section-heading">3.3 CPU Utilisation</h2>
-                        <p>
-                            CPU utilisation will be the sum of each task utilisation.
-                            <img src="./../../assets/images/sum.JPG" width=10% alt="Formula for CPU Utilisation">
-                            With time analysis using micros(), we obtained the task utilisation for each task as <em>CPU = 101.08/100 + 9.48/10 + 53.60/10 + 4.67/5 = 8.2528</em>
-                        </p>
-                        <p> For a number <em>m</em> tasks under RMS, CPU utilisation is computed as follows
-                            <!-- insert image -->
-                            <img src="./../../assets/images/maximum.JPG" width=20% alt="Formula for CPU Utilisation">
-                            Which yield to <em>CPUMax = 0.757</em>
-                        </p>
-
-                    </section><!--//section-->
-                   
-                    
+                <section class="docs-section" id="item-2-2">
+                    <h2 class="section-heading">1.2 Time assignment</h2>
+                    <p>
+                        The scheduler will ensure that every thread gets a time slot and will often give more time to higher priority threads. Since interrupts are given priority over the main execution, we have reduced the number of interrupts.
+                        The image below displays the logic for each task
+                    </p>
+                    <img src="./../../assets/images/TaskScheduler_arduino.png" width=80% alt="Task scheduler arduino diagram">
+                </section><!--//section-->
                 </article><!--//docs-article-->
+
+
+                  
+            <article class="docs-article" id="section-1">
+                <header class="docs-header">
+                    <h1 class="docs-heading">Shared data structures</h1>
+                    <section class="docs-intro">
+                        The image above suggests that <em>const StepSizes</em> and <em>currentStepSizes</em> can be accessed simultaneously. 
+                        <img src="./../../assets/images/VarAccessExplained.svg" width=80% alt="Access to different variables simultaneously - explained">
+                    
+                    </section><!--//docs-intro-->
+                    
+                </header>
+                    
+                <section class="docs-section" id="item-2-2">
+                    <h2 class="section-heading">2.1 RAM access - noteMessage</h2>
+                   <img src="./../../assets/images/noteMessagetime.svg" width=80% alt="Access to note messages - explained">
+                    <p>Variable <em>noteMessage</em> is accessed safely by all three functions because it is defined as a volatile :</p>
+                    <ol>
+                        <li>ScanKeysTask updates the variable based on the key pressed. </li>
+                        <li>AddMsgToQueue reads the variable after it was updated to add it to the queue of messages to print. These two events happens sequentially so the same element will not be accessed at the same time - they run in the same thread. </li>
+                        <li>DisplayUpdate has a greater priority than scanKeysTask and its frequency is 10 times greater. When noteMessage is updated, it will wait for scanKeysTask to release the semaphore and display the new value. There is no deadlocks because of the use of semaphores.</li>
+                    </ol>
+                    <p>Declaring the variable as a volatile directs the compiler to load it from RAM instead of a storage register. The compiler will write into a temporary storage register and it can read from RAM at the same time. One issue is that it may read a previous value, this is prevented by using semaphores to lock the variable whilst it is changed. </p>
+                </section><!--//section-->
                 
+                <section class="docs-section" id="item-2-3">
+                    <h2 class="section-heading">2.2 Simultaneous read - StepSizes </h2>
+                    <p></p>
+
+                </section><!--//section-->
+                
+                <section class="docs-section" id="item-2-3">
+                    <h2 class="section-heading">2.3 Read and write - currentStepSizes </h2>
+                    <p></p>
+
+                </section><!--//section-->
+            </article>
+                
+            <article class="docs-article" id="section-1">
+                <header class="docs-header">
+                    <h1 class="docs-heading">CPU Utilisation</h1>
+                    <section class="docs-intro">
+                        CPU utilisation will be the sum of each task utilisation.
+                            <img src="./../../assets/images/sum.JPG" width=10% alt="Formula for CPU Utilisation">
+                    </section><!--//docs-intro-->
+                </header>
+                    <section class="docs-section" id="item-2-1">
+                    <h2 class="section-heading">Worst case (to explain)</h2>
+                    <p>
+                            
+                        With time analysis using micros(), we obtained the task utilisation for each task as <em>CPU = 101.08/100 + 9.48/10 + 53.60/10 + 4.67/5 = 8.2528</em>
+                    </p>
+                    <p> For a number <em>m</em> tasks under RMS, CPU utilisation is computed as follows
+                        <!-- insert image -->
+                        <img src="./../../assets/images/maximum.JPG" width=20% alt="Formula for CPU Utilisation">
+                        Which yield to <em>CPUMax = 0.757</em>
+                    </p>                
+                </section><!--//section-->
+                    
+                    
+                <!-- <section class="docs-section" id="item-2-2">
+                    <h2 class="section-heading">Key tuning</h2>
+                    <a href="https://www.pianoscales.org">Piano Scales, used to implement different keys</a>
+                </section> -->
+                    
+            </article><!--//docs-article-->
+        
             </div> 
         </div>
     </div><!--//docs-wrapper-->

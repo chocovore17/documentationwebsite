@@ -34,7 +34,7 @@
                 <header class="docs-header">
                     <h1 class="docs-heading">Tasks performed</h1>
                     <section class="docs-intro">
-                        <p>Description of each core task performed by the system and their method of implementation.</p>
+                        <p>Description of each core task performed by the system and their method of implementation, thread or interrupt.</p>
                     </section><!--//docs-intro-->
                 </header>
                     <section class="docs-section" id="item-2-1">
@@ -79,9 +79,9 @@ uint8_t outValue = (phaseAcc >> 24) >> (8- knob3Position/2);
                     </p>
                     
                     <pre><code>
-                        vTaskDelayUntil(&xLastWakeTime, xFrequency);
+vTaskDelayUntil(&xLastWakeTime, xFrequency);
                                                
-                                            </code></pre>
+                     </code></pre>
                 </section><!--//section-->
             </article><!--//docs-article-->
             
@@ -97,16 +97,16 @@ uint8_t outValue = (phaseAcc >> 24) >> (8- knob3Position/2);
                   <tr>
                     <th scope="row">1</th>
                     <td>Plays correct musical tone when key is pressed</td>
-                    <td>scanKeysTask() <ul>
+                    <td>scanKeysTask() <strong>thread</strong> <ul>
                         <li>reads multiplexor </li>
-                        <li> updates currentStepSize</li>
+                        <li> updates currentStepSize volatile using a local variable </li>
                       </ul>
                         </td>
                   </tr>
                   <tr>
                     <th scope="row">2</th>
                     <td>OLED display - note played, volume</td>
-                    <td>displayUpdateTask() 
+                    <td>displayUpdateTask() <strong>thread</strong>
                         Semaphore for KeyArray to protect concurrency between scanKeysTask and displayUpdateTask
                         </td>
                   </tr>
@@ -124,15 +124,16 @@ uint8_t outValue = (phaseAcc >> 24) >> (8- knob3Position/2);
                     <td>Send message to serial port on keypress event</td>
                     <td>Format xxx - keypressed, keyreleased, octave
                         <ul>
-                        <li>Volatile noteMessage updated in scanKeysTask</li>
+                        <li>Volatile noteMessage updated in scanKeysTask <strong>thread</strong></li>
+                        <ul><li>Please see"Threads and interrupt" section for simultaneous access to noteMessage variable</li></ul>
                         <li>Add message to queue, printed in serial port (FIFO so updated consistently → size 8 is enough)</li>
                       </ul></td>
                   </tr>
                   <tr>
                     <th scope="row">5</th>
                     <td>Create tones via the serial port</td>
-                    <td>Input messages decoded by decodeMsg()<ul>
-                        <li>Decode Msg thread to execute at constant rate = keyboard sample rate</li>
+                    <td>Input messages decoded by decodeMsg() <strong>thread</strong><ul>
+                        <li>Thread to execute at constant rate = keyboard sample rate</li>
                       </ul></td>
                   </tr>
                 </tbody>

@@ -31,48 +31,70 @@
             <div class="container">
                 <article class="docs-article" id="section-1">
                     <header class="docs-header">
-                        <h1 class="docs-heading">Resources</h1>
+                        <h1 class="docs-heading">Time analysis </h1>
                         <section class="docs-intro">
-                            <p>Below are resources used for this project to implement our advanced features.</p>
+                            <p>Initiation intervals were set manually for each task and the maximum execution time was measured by taking 32 separate readings for each task and the average found.</p>
                         </section><!--//docs-intro-->
                     </header>
                         <section class="docs-section" id="item-2-1">
-                        <h2 class="section-heading">Changing the waveform.h</h2>
-                        <a href="http://www.daycounter.com/Calculators/Sine-Generator-Calculator.phtm">Sinewave lookup generator used to obtain the values within the corresponding advanced feature</a>
+                        <h2 class="section-heading">Initiation Intervals and Maximum Execution Time </h2>
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Task</th>
+                                <th scope="col">Initiation interval</th>
+                                <th scope="col">Maximum Execution Time</th>
+                                <th scope="col">Critical Instant Analysis</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th scope="row">1</th>
+                               <td>DisplayUpdateTask</td>
+                               <td>100ms</td>
+                               <td>101.08ms</td>
+                               <td>1</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">2</th>
+                                <td>MsgOutTask</td>
+                                <td>10ms</td>
+                                <td>9.48ms</td>
+                                <td>10</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">3</th>
+                                <td>scanKeysTask</td>
+                                <td>10ms</td>
+                                <td>53.60ms</td>
+                                <td>10</td>
+                              </tr>
+                              <tr>
+                                <th scope="row">4</th>      
+                                <td>DecodeMsgTask</td>
+                                <td>5ms</td>
+                                <td>4.67ms</td>
+                                <td>20</td>
+                              </tr>
+                            </tbody>
+                          </table>
                     </section><!--//section-->
                         
                         
                     <section class="docs-section" id="item-2-2">
-                        <h2 class="section-heading">Key tuning</h2>
-                        <a href="https://www.pianoscales.org">Piano Scales, used to implement different keys</a>
+                        <h2 class="section-heading">Critical Instant Analysis of Rate Monotonic Scheduler</h2>
+                        <p>For a single CPU, the tasks have fixed execution times. The fixed initiation interval for each task is also its deadline. There are no dependencies or switching overheads. The task priority is fixed and the shortest initiation has the highest priority. 0.0
+ 
+                            The worst case is if every task is initiated at the same time. If so the latency is:
+                            </p>
+                            <p>
+                                <em>Ln=100/10 x 9.48 + 100/10 x 53.60 + 100/5 x 4.67 + 100/100 x 101.08</em>
+                                <em>Ln=824.2 ms</em>
+                            </p>
+
                     </section><!--//section-->
                         
-                </article><!--//docs-article-->
-            
-    
-    
-                <article class="docs-article" id="section-2">
-                    <header class="docs-header">
-                        <h1 class="docs-heading">Libraries</h1>
-                        <section class="docs-intro">
-                            <p>Below are libraries used for this project, please check for dependencies .</p>
-                        </section><!--//docs-intro-->
-                    </header>
-                        <section class="docs-section" id="item-2-1">
-                        <h2 class="section-heading">STM32FreeRTOS.h</h2>
-                        <a href="https://github.com/stm32duino/wiki/wiki/Getting-Started">Click to clone the github repository for stm32duino library</a>
-                    </section><!--//section-->
-                        
-                        
-                    <section class="docs-section" id="item-2-2">
-                        <h2 class="section-heading">Display messages</h2>
-                        <a href="https://github.com/olikraus/U8g2_Arduino">U8g2 graphics library, please click to download </a>
-                    </section><!--//section-->
-                        
-                    <section class="docs-section" id="item-2-3">
-                        <h2 class="section-heading">Other Arduino libraries</h2>
-                        <p>Arduino wire library and Arduino string library (printing messages on the display board).</p>
-                    </section><!--//section-->
                 </article><!--//docs-article-->
         
             </div> 
