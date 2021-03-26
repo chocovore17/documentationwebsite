@@ -3,34 +3,24 @@
     
   
     <div class="docs-wrapper">
-        <div id="docs-sidebar" class="docs-sidebar">
-            <div class="top-search-box d-lg-none p-3">
-                <form class="search-form">
-                    <input type="text" placeholder="Search the docs..." name="search" class="form-control search-input">
-                    <button type="submit" class="btn search-btn" value="Search"><i class="fas fa-search"></i></button>
-                </form>
-            </div>
+        <!-- <div id="docs-sidebar" class="docs-sidebar">
             <nav id="docs-nav" class="docs-nav navbar">
                 <ul class="section-items list-unstyled nav flex-column pb-3">
-                    <li class="nav-item section-title"><a class="nav-link scrollto active" href="#section-1"><span class="theme-icon-holder mr-2"><i class="fas fa-map-signs"></i></span>Introduction</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-1">Section Item 1.1</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-2">Section Item 1.2</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-3">Section Item 1.3</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-4">Section Item 1.4</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-5">Section Item 1.5</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-1-6">Section Item 1.6</a></li>
-                    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-2"><span class="theme-icon-holder mr-2"><i class="fas fa-arrow-down"></i></span>Installation</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-1">Section Item 2.1</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-2">Section Item 2.2</a></li>
-                    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-3">Section Item 2.3</a></li>
+                    <li class="nav-item section-title"><a class="nav-link js-scroll-trigger"  (click)="scrollToElement(sectioncore)">Introduction</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger"  (click)="scrollToElement(Octaves)">1.1 Octaves</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger"  (click)="scrollToElement(frequencyshift)">1.2 Frequency Shift</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger"  (click)="scrollToElement(sustainednotes)">1.3 Sustained Notes</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger"  (click)="scrollToElement(keyselection)">1.4 Key Selection</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger"  (click)="scrollToElement(waveformselection)">1.5 Waveform Selection</a></li>
+                    <li class="nav-item section-title"><a class="nav-link js-scroll-trigger"  (click)="scrollToElement(Overview)">Overview of core functionalities</a></li>
                 </ul>
     
-            </nav><!--//docs-nav-->
-        </div><!--//docs-sidebar-->
+            </nav>
+        </div> -->
         <div class="docs-content">
             <div class="container">
                 
-                <article class="docs-article" id="section-2">
+                <article class="docs-article" id="section-1" #sectioncore>
                     <header class="docs-header">
                         <h1 class="docs-heading">Advanced features</h1>
                         <section class="docs-intro">
@@ -51,30 +41,30 @@ xSemaphoreGive(pitchMutex);
 
                         </section><!--//docs-intro-->
                     </header>
-                        <section class="docs-section" id="item-2-1">
-                        <h2 class="section-heading">2.1 Octaves</h2>
+                        <section class="docs-section" id="item11" #Octaves >
+                        <h2 class="section-heading">1.1 Octaves</h2>
                         <p>
                             Using knob3 this feature allows the user to select which octave they wish to play in (The same note shifted one octave up is the same as doubling the frequency of the note). The default octave is 4 (Middle C) and can be changed to be any octave from 0 - 8.
 
                         </p>
                     </section><!--//section-->
                     
-                    <section class="docs-section" id="item-2-2">
-                        <h2 class="section-heading">2.2 Frequency shift</h2>
+                    <section class="docs-section" id="item-1-2" #frequencyshift>
+                        <h2 class="section-heading">1.2 Frequency shift</h2>
                         <p>
                             This feature mimics the ‘whammy bar’ found on many electric guitars. By using the Y axis of the Joystick the user can shift the note being played by plus or minus a full tone.
 
                         </p>
                     </section><!--//section-->
                     
-                    <section class="docs-section" id="item-2-3">
+                    <section class="docs-section" id="item-1-3" #sustainednotes>
                         <h2 class="section-heading">2.3 Sustained notes</h2>
                         <p>
                             Most production keyboards come with (or have a purchasable attachment) a sustain pedal, so to implement this feature we made use of the knobs having push feature so that when the user presses the sustain knob, the current note being played is held until another note it played
 
                         </p>
                     </section><!--//section-->
-                    <section class="docs-section" id="item-2-4">
+                    <section class="docs-section" id="item-1-4" #keyselection>
                         <h2 class="section-heading">2.4 Key selection</h2>
                         <p>
                             This feature allows the user to play in whichever key they desire without having to recall the exact notes which exist in that key. By rotating knob 1, key options are cycled through and displayed on the OLED screen. If set to ‘None’ all the notes are assigned as normal, however when set to a certain key, the notes assigned to each key change. For example if the key C minor was selected, the note values would be as in the Figure on the left is in the Cmaj setting and the Figure on the right is the Cmin setting.  The sharp/flat notes are set to not make sounds on this setting.
@@ -112,7 +102,7 @@ scanKeysTask (void * pvParameters)
 
                           
                     </section><!--//section-->
-                    <section class="docs-section" id="item-2-5">
+                    <section class="docs-section" id="item-1-5" #waveformselection>
                         <h2 class="section-heading">2.5 Waveform selection</h2>
                         <p>
                             This feature is implemented using the first knob of the keyboard. Turning the knob ranges from 0-2 and allows the user to select between three different waveforms
@@ -130,7 +120,7 @@ scanKeysTask (void * pvParameters)
                     
                 </article><!--//docs-article-->
                 
-                <table class="table">
+                <table class="table" #Overview>
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -143,17 +133,17 @@ scanKeysTask (void * pvParameters)
                           <th scope="row">1</th>
                           <td>Read all knobs</td>
                           <td><ol>
-                            <li>Knobs class, scan knob function becomes object oriented
+                            <li> <em>Knobs class</em>, scan knob function becomes object oriented
                             </li>
-                            <li>Each scanKnob between waiting to receive semaphore and giving it up after taks complete</li>
-                            <li>Each knob has its semaphore - concurrency and we can change them at the same time</li>
+                            <li>Each knob has its <em>semaphore</em> - the can be updated at the same time and are all safely accessed.</li>
+                            <li>Each scanKnob between waiting to receive semaphore and giving it up after taks complete. </li>
                           </ol> </td>
                         </tr>
                       <tr>
                         <th scope="row">2</th>
                         <td>Change Octaves</td>
                         <td>Dynamic variable shift to multiply the note frequency by the current knob rotation
-                        Knob3 changes the frequency shift by the current knob value (just read) and updates in the atomic fetch for step size.
+                        Knob3 changes the frequency shift by the current knob value (just read) and updates in the <em>atomic fetch</em> for step size.
                         All done in the same function
                         </td>
                       </tr>
@@ -161,7 +151,7 @@ scanKeysTask (void * pvParameters)
                         <th scope="row">3</th>
                         <td>Shift in frequency</td>
                         <td>
-                            Y axis of the joystick
+                            Y axis of the joystick (TO EXPLAIN)
                             </td>
                       </tr>
                       <tr>
@@ -172,7 +162,7 @@ scanKeysTask (void * pvParameters)
                       <tr>
                         <th scope="row">5</th>
                         <td>Selecting a key</td>
-                        <td>Limited to the 14 keys of the bored, use different step sizes depending on current key 
+                        <td>Limited to the 14 keys of the bored, use different step sizes depending on current key, see data dependencies section for more info
                             <ul>
                             <li>Volatile noteMessage updated in scanKeysTask</li>
                             <li>Add message to queue, printed in serial port (FIFO so updated consistently → size 8 is enough)</li>

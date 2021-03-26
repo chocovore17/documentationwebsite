@@ -110,26 +110,35 @@
                 <section class="docs-section" id="item-2-2">
                     <h2 class="section-heading">2.1 RAM access - noteMessage</h2>
                    <img src="./../../assets/images/noteMessagetime.svg" width=80% alt="Access to note messages - explained">
-                    <p>Variable <em>noteMessage</em> is accessed safely by all three functions because it is defined as a volatile :</p>
+                    <p>Variable <em>noteMessage</em> will display its latest updated value because it is defined as a volatile :</p>
                     <ol>
                         <li>ScanKeysTask updates the variable based on the key pressed. </li>
                         <li>AddMsgToQueue reads the variable after it was updated to add it to the queue of messages to print. These two events happens sequentially so the same element will not be accessed at the same time - they run in the same thread. </li>
                         <li>DisplayUpdate has a greater priority than scanKeysTask and its frequency is 10 times greater. When noteMessage is updated, it will wait for scanKeysTask to release the semaphore and display the new value. There is no deadlocks because of the use of semaphores.</li>
                     </ol>
-                    <p>Declaring the variable as a volatile directs the compiler to load it from RAM instead of a storage register. The compiler will write into a temporary storage register and it can read from RAM at the same time. One issue is that it may read a previous value, this is prevented by using semaphores to lock the variable whilst it is changed. </p>
+                    <p>Declaring the variable as a volatile directs the compiler to load it from RAM instead of a storage register. The compiler will write into a temporary storage register and it can read from RAM at the same time. If two threads read a volatile at the same time, it is possible that they will access the same element in RAM. This is prevented by using semaphores to lock the variable whilst it is changed. </p>
                 </section><!--//section-->
                 
                 <section class="docs-section" id="item-2-3">
                     <h2 class="section-heading">2.2 Simultaneous read - StepSizes </h2>
-                    <p></p>
-
+                    <p>The main problem with multiple threads is mutability. Declaring StepSizes as a const restricts this. Any immutable data is thread safe because there is no risk for several threads to read the same data concurrently, stepSizes will never change.</p>
                 </section><!--//section-->
                 
                 <section class="docs-section" id="item-2-3">
                     <h2 class="section-heading">2.3 Read and write - currentStepSizes </h2>
-                    <p></p>
+                    <p>The threads will not run concurrently. DecodeMsgTask will write to currentStepSizes, this value will be updated to RAM. The interrupt may try to concurrently access part of this variable. Using an Atomic Store will only write the bits we need. Store and reading can be done in two separate parts in memory, the interrupt will hold the correct value for currentStepSizes </p>
+                    <img src="./../../assets/images/currentstepsizetime.svg" width=80% alt="Access to note messages - explained">
 
                 </section><!--//section-->
+
+                <section class="docs-section" id="item-2-3">
+                    <h2 class="section-heading">2.4 Locked knobs  </h2>
+                    <p>Knobs can be updated at the same time, several threads will access them. This may result in some delay as a thread may read a local copy that has been outdated by another thread. The note will eventually be corrected. </p>
+                    <img src="./../../assets/images/knob2graph.svg" width=80% alt="Access to note messages - explained">
+
+                </section><!--//section-->
+
+                
             </article>
                 
             <article class="docs-article" id="section-1">
@@ -141,15 +150,14 @@
                     </section><!--//docs-intro-->
                 </header>
                     <section class="docs-section" id="item-2-1">
-                    <h2 class="section-heading">Worst case (to explain)</h2>
+                    <h2 class="section-heading">Worst case analysis</h2>
                     <p>
-                            
                         With time analysis using micros(), we obtained the task utilisation for each task as <em>CPU = 101.08/100 + 9.48/10 + 53.60/10 + 4.67/5 = 8.2528</em>
                     </p>
                     <p> For a number <em>m</em> tasks under RMS, CPU utilisation is computed as follows
                         <!-- insert image -->
                         <img src="./../../assets/images/maximum.JPG" width=20% alt="Formula for CPU Utilisation">
-                        Which yield to <em>CPUMax = 0.757</em>
+                        Which yield to <em>CPUMax = 0.757</em> This is relatively low utilisation for worst case conditions considering it is unlikely to be pressing all keys and knobs on the keyboard simultaneously. This value seems correct since there is room to implement other advanced features. 
                     </p>                
                 </section><!--//section-->
                     

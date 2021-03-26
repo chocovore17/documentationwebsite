@@ -9,6 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { AdvancedFeaturesComponent } from './advanced-features/advanced-features.component';
 import { ThreadAnalysisComponent } from './thread-analysis/thread-analysis.component';
 import { TimeAnalysisComponent } from './time-analysis/time-analysis.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { TimeAnalysisComponent } from './time-analysis/time-analysis.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
